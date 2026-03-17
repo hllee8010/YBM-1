@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YBM-1 | 에듀케레 영어 분석지</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2744;
+    --gold: #c8a84b;
+    --gold-light: #f0dfa0;
+    --bg: #f5f3ee;
+    --white: #ffffff;
+    --sidebar-w: 260px;
+    --accent: #2a4a8a;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --border: #ddd8cc;
+    --green: #2d6a4f;
+    --green-light: #d8f3dc;
+    --red: #c0392b;
+    --red-light: #fde8e8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* SIDEBAR */
+  #sidebar {
+    width: var(--sidebar-w);
+    background: var(--navy);
+    color: #e8e0d0;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    border-right: 3px solid var(--gold);
+  }
+  .sidebar-header {
+    padding: 24px 18px 16px;
+    border-bottom: 1px solid rgba(200,168,75,0.3);
+  }
+  .sidebar-brand { font-family:'Playfair Display',serif; font-size:13px; color:var(--gold); letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
+  .sidebar-title { font-size:22px; font-weight:700; color:#fff; font-family:'Playfair Display',serif; }
+  .sidebar-sub { font-size:11px; color:rgba(200,168,75,0.7); margin-top:4px; }
+  .sidebar-section { padding:12px 10px 6px 18px; font-size:10px; color:var(--gold); letter-spacing:2px; text-transform:uppercase; opacity:0.7; font-weight:700; }
+  .passage-btn {
+    display:block; width:100%; text-align:left; background:none; border:none;
+    color:#c8c0b0; padding:10px 18px; font-size:12px; font-family:'Noto Sans KR',sans-serif;
+    cursor:pointer; border-left:3px solid transparent; transition:all 0.2s; line-height:1.4;
+  }
+  .passage-btn:hover { background:rgba(200,168,75,0.1); color:#fff; }
+  .passage-btn.active { background:rgba(200,168,75,0.15); border-left-color:var(--gold); color:var(--gold); font-weight:700; }
+  .passage-btn .p-num { font-size:10px; opacity:0.6; display:block; margin-bottom:2px; }
+
+  /* MAIN */
+  #main { margin-left:var(--sidebar-w); flex:1; display:flex; flex-direction:column; min-height:100vh; }
+
+  /* TABS */
+  #tab-bar {
+    background:var(--navy); display:flex; overflow-x:auto; padding:0 20px;
+    position:sticky; top:0; z-index:90; border-bottom:3px solid var(--gold); gap:2px;
+  }
+  .tab-btn {
+    background:none; border:none; color:rgba(255,255,255,0.55); padding:14px 16px 11px;
+    font-size:12px; font-family:'Noto Sans KR',sans-serif; font-weight:500; cursor:pointer;
+    white-space:nowrap; border-bottom:3px solid transparent; margin-bottom:-3px; transition:all 0.2s;
+  }
+  .tab-btn:hover { color:rgba(255,255,255,0.85); }
+  .tab-btn.active { color:var(--gold); border-bottom-color:var(--gold); font-weight:700; }
+
+  /* CONTENT */
+  #content { padding:36px 40px; max-width:920px; }
+
+  /* PASSAGE HEADER */
+  .passage-header { margin-bottom:28px; border-left:5px solid var(--gold); padding-left:16px; }
+  .passage-header .label { font-size:11px; color:var(--gold); letter-spacing:2px; text-transform:uppercase; font-weight:700; margin-bottom:4px; }
+  .passage-header h1 { font-family:'Playfair Display',serif; font-size:26px; color:var(--navy); font-weight:900; line-height:1.2; }
+  .passage-header .author { font-size:13px; color:var(--muted); margin-top:6px; font-style:italic; font-family:'EB Garamond',serif; }
+
+  /* FULL TEXT */
+  .full-text-box {
+    background:var(--white); border:2px solid var(--navy); border-left:6px solid var(--gold);
+    border-radius:4px; padding:24px 28px; margin-bottom:32px;
+    font-family:'EB Garamond',serif; font-size:17px; line-height:1.9; color:var(--text);
+  }
+  .full-text-box p { margin-bottom:12px; }
+  .full-text-box p:last-child { margin-bottom:0; }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family:'Playfair Display',serif; font-size:18px; color:var(--navy); font-weight:700;
+    margin-bottom:20px; padding-bottom:8px; border-bottom:2px solid var(--gold);
+    display:flex; align-items:center; gap:10px;
+  }
+  .section-title .icon {
+    width:28px; height:28px; background:var(--navy); color:var(--gold); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700;
+  }
+
+  /* SENTENCE ANALYSIS */
+  .sentence-block { margin-bottom:28px; padding-bottom:28px; border-bottom:1px dashed var(--border); }
+  .sentence-block:last-child { border-bottom:none; }
+  .sent-num {
+    display:inline-block; width:26px; height:26px; background:var(--navy); color:var(--gold);
+    border-radius:50%; font-size:12px; font-weight:700; text-align:center; line-height:26px;
+    margin-bottom:10px; font-family:'EB Garamond',serif;
+  }
+  .eng-box {
+    background:#fafafa; border:1px solid #ccc; border-left:4px solid var(--accent);
+    border-radius:3px; padding:12px 16px; font-family:'EB Garamond',serif; font-size:16px;
+    line-height:1.7; color:var(--text); margin-bottom:10px;
+  }
+  .jikdok { padding:8px 16px; font-size:13px; color:#444; line-height:1.8; margin-bottom:10px; }
+  .jikdok .eng-part { color:var(--accent); font-family:'EB Garamond',serif; font-style:italic; }
+  .jikdok .kor-part { color:#555; display:block; font-size:12px; margin-top:2px; padding-left:8px; border-left:2px solid var(--gold-light); }
+  .grammar-bullets { margin-top:8px; }
+  .grammar-item { background:#fffdf5; border:1px solid #ede8d0; border-radius:4px; padding:8px 14px; margin-bottom:6px; font-size:12px; line-height:1.7; }
+  .grammar-item .g-name { color:var(--navy); font-weight:700; }
+  .grammar-item .g-ex { color:var(--accent); font-family:'EB Garamond',serif; font-style:italic; }
+  .grammar-item .g-point { color:#7a5c00; }
+
+  /* VOCAB */
+  .vocab-item { display:flex; align-items:baseline; gap:10px; padding:10px 14px; border-bottom:1px solid var(--border); font-size:13px; flex-wrap:wrap; }
+  .vocab-item:nth-child(odd) { background:#fafaf7; }
+  .vocab-word { font-family:'EB Garamond',serif; font-size:16px; font-weight:700; color:var(--navy); min-width:160px; }
+  .vocab-meaning { color:var(--text); flex:1; min-width:120px; }
+  .vocab-pos { color:var(--gold); font-size:11px; font-style:italic; min-width:55px; }
+  .vocab-deriv { color:var(--muted); font-size:11px; font-family:'EB Garamond',serif; flex:1; }
+
+  /* TRANSLATION */
+  .translation-text { background:var(--white); border-radius:6px; padding:24px 28px; font-size:14px; line-height:2.1; color:var(--text); box-shadow:0 1px 4px rgba(0,0,0,0.05); border-left:4px solid var(--gold); }
+
+  /* TOPIC */
+  .topic-card { background:var(--white); border-radius:8px; padding:20px 24px; margin-bottom:16px; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+  .topic-label { font-size:11px; font-weight:700; color:var(--gold); letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }
+  .topic-content { font-size:14px; line-height:1.8; color:var(--text); }
+  .flow-steps { display:flex; gap:0; margin-top:8px; flex-wrap:wrap; }
+  .flow-step { background:var(--navy); color:#fff; padding:8px 14px; font-size:12px; position:relative; margin-bottom:6px; line-height:1.5; }
+  .flow-step:not(:last-child)::after { content:'▶'; position:absolute; right:-14px; top:50%; transform:translateY(-50%); color:var(--gold); font-size:12px; z-index:1; }
+  .flow-step:not(:first-child) { margin-left:16px; }
+
+  /* QUIZ */
+  .quiz-item { background:var(--white); border-radius:8px; padding:24px; margin-bottom:24px; box-shadow:0 1px 6px rgba(0,0,0,0.07); border-top:3px solid var(--navy); }
+  .quiz-q { font-size:14px; font-weight:700; color:var(--navy); margin-bottom:6px; line-height:1.7; white-space:pre-line; }
+  .quiz-passage { font-family:'EB Garamond',serif; font-size:14px; line-height:1.8; background:#f8f8f6; border:1px solid #e0ddd5; border-radius:4px; padding:12px 16px; margin:10px 0; color:#333; }
+  .quiz-options { margin-top:12px; }
+  .quiz-option {
+    display:block; width:100%; text-align:left; background:#f9f9f7; border:1.5px solid #e0ddd5;
+    border-radius:5px; padding:10px 16px; margin-bottom:8px; font-size:13px;
+    font-family:'Noto Sans KR',sans-serif; cursor:pointer; transition:all 0.15s; color:var(--text);
+  }
+  .quiz-option:hover:not([disabled]) { border-color:var(--navy); background:#f0f0ff; }
+  .quiz-option.correct { background:var(--green-light); border-color:var(--green); color:var(--green); font-weight:700; }
+  .quiz-option.wrong { background:var(--red-light); border-color:var(--red); color:var(--red); }
+  .quiz-explanation { display:none; margin-top:12px; padding:10px 14px; background:#f0f7ff; border-left:3px solid var(--accent); font-size:12px; line-height:1.7; color:#2c3e6b; border-radius:0 4px 4px 0; }
+  .quiz-explanation.show { display:block; }
+  .quiz-reset { margin-top:10px; background:none; border:1.5px solid var(--navy); border-radius:4px; padding:6px 16px; font-size:12px; cursor:pointer; color:var(--navy); font-family:'Noto Sans KR',sans-serif; transition:all 0.15s; display:none; }
+  .quiz-reset:hover { background:var(--navy); color:#fff; }
+  .quiz-reset.show { display:inline-block; }
+
+  /* WRITTEN */
+  .written-q { background:var(--white); border-radius:8px; padding:24px; margin-bottom:24px; box-shadow:0 1px 6px rgba(0,0,0,0.07); border-top:3px solid var(--gold); }
+  .written-q .wq-title { font-size:14px; font-weight:700; color:var(--navy); margin-bottom:6px; }
+  .written-q .wq-cond { font-size:12px; color:var(--muted); margin-bottom:12px; font-style:italic; }
+  .written-q textarea { width:100%; min-height:90px; border:1.5px solid var(--border); border-radius:4px; padding:10px 14px; font-family:'Noto Sans KR',sans-serif; font-size:13px; resize:vertical; color:var(--text); background:#fafafa; outline:none; transition:border 0.2s; }
+  .written-q textarea:focus { border-color:var(--navy); background:#fff; }
+  .check-answer-btn { margin-top:10px; background:var(--navy); border:none; border-radius:4px; padding:8px 20px; font-size:12px; cursor:pointer; color:var(--gold); font-family:'Noto Sans KR',sans-serif; font-weight:700; transition:all 0.15s; }
+  .check-answer-btn:hover { background:var(--accent); }
+  .model-answer { display:none; margin-top:12px; padding:12px 16px; background:#f0fff4; border-left:3px solid var(--green); font-size:13px; line-height:1.8; color:var(--green); border-radius:0 4px 4px 0; }
+  .model-answer.show { display:block; }
+  .model-answer .ma-label { font-weight:700; font-size:11px; letter-spacing:1px; margin-bottom:4px; }
+
+  ::-webkit-scrollbar { width:6px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:rgba(200,168,75,0.4); border-radius:3px; }
+
+  @media (max-width:768px) {
+    :root { --sidebar-w:220px; }
+    #content { padding:20px 18px; }
+    .tab-btn { padding:12px 10px; font-size:11px; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-brand">에듀케레 영수학원</div>
+    <div class="sidebar-title">YBM-1</div>
+    <div class="sidebar-sub">The Magic of Morning Pages</div>
+  </div>
+  <div class="sidebar-section">지문 선택</div>
+  <button class="passage-btn active" onclick="selectPassage(0)">
+    <span class="p-num">Passage 1</span>
+    The Magic of Morning Pages
+  </button>
+  <button class="passage-btn" onclick="selectPassage(1)">
+    <span class="p-num">Passage 2</span>
+    Experiences: David & Yuna
+  </button>
+  <button class="passage-btn" onclick="selectPassage(2)">
+    <span class="p-num">Passage 3</span>
+    Regan's Story & Message
+  </button>
+</nav>
+
+<div id="main">
+  <div id="tab-bar">
+    <button class="tab-btn active" onclick="selectTab('full-text')">① 전문</button>
+    <button class="tab-btn" onclick="selectTab('analysis')">② 문장분석</button>
+    <button class="tab-btn" onclick="selectTab('vocab')">③ 핵심단어</button>
+    <button class="tab-btn" onclick="selectTab('translation')">④ 전문해석</button>
+    <button class="tab-btn" onclick="selectTab('topic')">⑤ 주제·요지</button>
+    <button class="tab-btn" onclick="selectTab('quiz')">⑥ 변형문제</button>
+  </div>
+  <div id="content"></div>
+</div>
+
+<script>
+const passages = [
+
+/* ══════════════════════════════════════
+   PASSAGE 0 — The Magic of Morning Pages
+══════════════════════════════════════ */
+{
+  id:'p0', num:'Passage 1',
+  title:'The Magic of Morning Pages',
+  author:'Regan · Good Habits Podcast Host',
+  fullText:[
+    `Welcome to my channel Good Habits! This is Regan, your podcast host. Today, I'm going to talk about a way of starting the day that many people, including me, find enormously useful. It's a kind of journaling called "the morning pages." There is no age at which it is too late to form this habit. I started eight years ago as a high school student, and that's why today's episode is especially for my teenage subscribers.`,
+    `The morning pages are three pages of "free writing," ideally done first thing in the morning. The concept is simple. Get up every morning, pick up a pen and a notebook, and write whatever crosses your mind until you have filled three pages. The technique was originally developed to help writers and artists overcome a loss of creativity, but anybody can use it to create a better life.`,
+    `There is no right or wrong way to write your morning pages, but there are two rules. First, don't judge your writing as good or bad. These pages are meant to be a "brain cleansing," so don't worry about writing correctly. Second, keep your writing completely private. It is important for you to write freely and honestly. You're even advised not to read your writing yourself for weeks.`
+  ],
+  sentences:[
+    {
+      eng:`Welcome to my channel Good Habits! This is Regan, your podcast host.`,
+      jikdok:[
+        {e:`Welcome to / my channel Good Habits!`, k:`환영합니다 / 저의 채널 Good Habits에!`},
+        {e:`This is Regan, / your podcast host.`, k:`저는 Regan이고 / 여러분의 팟캐스트 진행자입니다.`}
+      ],
+      grammar:[
+        {name:`Welcome to + 명사구 (환영 표현)`, ex:`Welcome to my channel Good Habits`, point:`'~에 오신 것을 환영합니다' 관용 표현. 글·방송 도입부 인사로 수능 독해 첫 문장으로 빈출.`},
+        {name:`동격 명사 (Regan, your podcast host)`, ex:`This is Regan, your podcast host`, point:`쉼표(,) 뒤 명사가 앞 명사를 동격으로 설명. Regan = your podcast host.`}
+      ]
+    },
+    {
+      eng:`Today, I'm going to talk about a way of starting the day that many people, including me, find enormously useful.`,
+      jikdok:[
+        {e:`Today, / I'm going to talk about / a way of starting the day`, k:`오늘 / 저는 이야기할 것입니다 / 하루를 시작하는 방법에 대해`},
+        {e:`that many people, including me, / find enormously useful.`, k:`많은 사람들이, 저를 포함해 / 매우 유용하다고 느끼는.`}
+      ],
+      grammar:[
+        {name:`관계대명사 that (목적격)`, ex:`a way of starting the day that many people find enormously useful`, point:`선행사 a way를 수식하는 목적격 관계대명사 that. find + 목적어 + 형용사(보어) 5형식 구조.`},
+        {name:`find + 목적어 + 형용사 (5형식)`, ex:`find enormously useful`, point:`관계절 안의 5형식. 관계대명사 that이 목적어 역할. find A B = 'A를 B라고 생각하다'.`}
+      ]
+    },
+    {
+      eng:`It's a kind of journaling called "the morning pages."`,
+      jikdok:[
+        {e:`It's a kind of journaling / called "the morning pages."`, k:`그것은 일종의 저널링입니다 / "모닝 페이지"라고 불리는.`}
+      ],
+      grammar:[
+        {name:`과거분사구 후치 수식 (called ~)`, ex:`a kind of journaling called "the morning pages"`, point:`명사 뒤에 과거분사구가 와서 명사를 수식. called = which is called의 축약. 수능 어법 빈출.`}
+      ]
+    },
+    {
+      eng:`There is no age at which it is too late to form this habit.`,
+      jikdok:[
+        {e:`There is no age / at which / it is too late / to form this habit.`, k:`어떤 나이도 없습니다 / 그 나이에 / 너무 늦은 / 이 습관을 형성하기에.`}
+      ],
+      grammar:[
+        {name:`전치사 + 관계대명사 (at which)`, ex:`no age at which it is too late`, point:`'전치사 + 관계대명사' 구조. at which = when. 전치사 앞에 오면 that 사용 불가(at that ×).`},
+        {name:`가주어 it + 진주어 to부정사`, ex:`it is too late to form this habit`, point:`it은 가주어, to form this habit이 진주어. too ~ to V = '너무 ~해서 …할 수 없다'가 아닌 '…하기에 너무 ~한' 구조.`}
+      ]
+    },
+    {
+      eng:`I started eight years ago as a high school student, and that's why today's episode is especially for my teenage subscribers.`,
+      jikdok:[
+        {e:`I started eight years ago / as a high school student,`, k:`저는 8년 전에 시작했습니다 / 고등학생으로서,`},
+        {e:`and that's why / today's episode is especially for / my teenage subscribers.`, k:`그리고 그것이 바로 이유입니다 / 오늘의 에피소드가 특히 ~을 위한 / 저의 십 대 구독자들.`}
+      ],
+      grammar:[
+        {name:`That's why ~ (결과 관계부사절)`, ex:`that's why today's episode is especially for my teenage subscribers`, point:`That is why + 결과절. 앞 내용의 결과를 이끔. That's because(원인)와 혼동 금지.`}
+      ]
+    },
+    {
+      eng:`The morning pages are three pages of "free writing," ideally done first thing in the morning.`,
+      jikdok:[
+        {e:`The morning pages are / three pages of "free writing,"`, k:`모닝 페이지는 / "자유 글쓰기"의 세 페이지이고,`},
+        {e:`ideally done / first thing in the morning.`, k:`이상적으로는 하는 것입니다 / 아침에 가장 먼저.`}
+      ],
+      grammar:[
+        {name:`과거분사구 후치 수식 (done ~)`, ex:`three pages of "free writing," ideally done first thing in the morning`, point:`done은 과거분사로 앞 명사구(three pages of "free writing")를 후치 수식. ideally는 부사로 done 수식.`}
+      ]
+    },
+    {
+      eng:`The concept is simple.`,
+      jikdok:[
+        {e:`The concept is simple.`, k:`개념은 간단합니다.`}
+      ],
+      grammar:[
+        {name:`2형식 주격보어 (simple)`, ex:`The concept is simple`, point:`be동사 + 형용사 보어. 2형식 문장. 앞 내용을 요약하는 핵심 문장으로 담화 표지 기능.`}
+      ]
+    },
+    {
+      eng:`Get up every morning, pick up a pen and a notebook, and write whatever crosses your mind until you have filled three pages.`,
+      jikdok:[
+        {e:`Get up every morning, / pick up a pen and a notebook,`, k:`매일 아침 일어나 / 펜과 공책을 집어 들고,`},
+        {e:`and write / whatever crosses your mind / until you have filled three pages.`, k:`그리고 쓰세요 / 마음속에 떠오르는 무엇이든 / 세 페이지를 채울 때까지.`}
+      ],
+      grammar:[
+        {name:`명령문 병렬 (Get up / pick up / write)`, ex:`Get up ~ pick up ~ and write`, point:`동사원형 3개 병렬 명령문. and로 마지막 동작 연결. 순서에 따른 행동 지시.`},
+        {name:`복합관계대명사 whatever (명사절)`, ex:`write whatever crosses your mind`, point:`whatever = anything that. 동사 write의 목적어 명사절. '~하는 무엇이든'.`},
+        {name:`시간 부사절 (until + 현재완료)`, ex:`until you have filled three pages`, point:`until절에서 미래 완료 상황을 현재완료(have filled)로 표현. 완료의 의미 강조.`}
+      ]
+    },
+    {
+      eng:`The technique was originally developed to help writers and artists overcome a loss of creativity, but anybody can use it to create a better life.`,
+      jikdok:[
+        {e:`The technique was originally developed / to help writers and artists / overcome a loss of creativity,`, k:`그 기법은 원래 개발되었습니다 / 작가들과 예술가들이 / 창의성 상실을 극복하도록 돕기 위해,`},
+        {e:`but anybody can use it / to create a better life.`, k:`하지만 누구든지 그것을 사용할 수 있습니다 / 더 나은 삶을 만들기 위해.`}
+      ],
+      grammar:[
+        {name:`수동태 + 목적의 to부정사`, ex:`was originally developed to help writers and artists overcome`, point:`be developed to V: 수동태 뒤 목적의 to부정사. help + 목적어 + 동사원형(원형부정사) 구조.`},
+        {name:`help + 목적어 + 동사원형 (원형부정사)`, ex:`help writers and artists overcome a loss of creativity`, point:`help는 목적격보어로 to부정사·원형부정사 모두 가능. overcome(원형) = to overcome.`}
+      ]
+    },
+    {
+      eng:`There is no right or wrong way to write your morning pages, but there are two rules.`,
+      jikdok:[
+        {e:`There is no right or wrong way / to write your morning pages,`, k:`올바르거나 잘못된 방법은 없습니다 / 모닝 페이지를 쓰는,`},
+        {e:`but there are two rules.`, k:`하지만 두 가지 규칙이 있습니다.`}
+      ],
+      grammar:[
+        {name:`to부정사 형용사적 용법 (way to write)`, ex:`no right or wrong way to write your morning pages`, point:`to부정사가 명사 way를 뒤에서 수식. '~할 방법'. 형용사적 용법.`}
+      ]
+    },
+    {
+      eng:`First, don't judge your writing as good or bad.`,
+      jikdok:[
+        {e:`First, / don't judge your writing / as good or bad.`, k:`첫째, / 글쓰기를 판단하지 마세요 / 좋거나 나쁘다고.`}
+      ],
+      grammar:[
+        {name:`judge A as B (A를 B로 판단하다)`, ex:`judge your writing as good or bad`, point:`judge A as B: 'A를 B로 판단하다'. as는 자격·상태를 나타내는 전치사.`}
+      ]
+    },
+    {
+      eng:`These pages are meant to be a "brain cleansing," so don't worry about writing correctly.`,
+      jikdok:[
+        {e:`These pages are meant to be / a "brain cleansing,"`, k:`이 페이지들은 ~이 되도록 의도되었습니다 / "뇌 정화",`},
+        {e:`so don't worry about / writing correctly.`, k:`그러므로 걱정하지 마세요 / 올바르게 쓰는 것에 대해.`}
+      ],
+      grammar:[
+        {name:`be meant to + 동사원형 (의도·목적)`, ex:`are meant to be a "brain cleansing"`, point:`be meant to V = be intended to V = '~하도록 의도되다'. 수동 의미의 관용 표현.`},
+        {name:`전치사 about + 동명사`, ex:`don't worry about writing correctly`, point:`worry about + 동명사: 전치사 목적어. 'worry about to write(×)' 오류 주의.`}
+      ]
+    },
+    {
+      eng:`Second, keep your writing completely private.`,
+      jikdok:[
+        {e:`Second, / keep your writing / completely private.`, k:`둘째, / 글쓰기를 유지하세요 / 완전히 사적으로.`}
+      ],
+      grammar:[
+        {name:`keep + 목적어 + 형용사 보어 (5형식)`, ex:`keep your writing completely private`, point:`keep + 목적어 + 형용사: 'A를 B한 상태로 유지하다'. 5형식 구조.`}
+      ]
+    },
+    {
+      eng:`It is important for you to write freely and honestly.`,
+      jikdok:[
+        {e:`It is important / for you / to write freely and honestly.`, k:`중요합니다 / 여러분에게 / 자유롭고 솔직하게 쓰는 것이.`}
+      ],
+      grammar:[
+        {name:`가주어 it + 의미상 주어 for + 진주어 to부정사`, ex:`It is important for you to write freely and honestly`, point:`It(가주어) ~ to write(진주어). for you = to부정사의 의미상 주어. 형용사 important 뒤 for 사용.`}
+      ]
+    },
+    {
+      eng:`You're even advised not to read your writing yourself for weeks.`,
+      jikdok:[
+        {e:`You're even advised / not to read your writing / yourself / for weeks.`, k:`여러분은 심지어 권고받습니다 / 자신의 글을 읽지 말라고 / 직접 / 몇 주 동안.`}
+      ],
+      grammar:[
+        {name:`수동태 + to부정사의 부정 (not to V)`, ex:`are advised not to read your writing`, point:`advise + 목적어 + not to V → 수동: be advised not to V. to부정사 부정은 not을 to 앞에 위치.`},
+        {name:`재귀대명사 강조 용법 (yourself)`, ex:`read your writing yourself`, point:`yourself는 강조 용법. '직접, 스스로'. 생략해도 문법적으로 완전한 문장.`}
+      ]
+    }
+  ],
+  vocab:[
+    {word:`enormously`, meaning:`엄청나게, 대단히`, pos:`adv.`, deriv:`enormous (adj.)`},
+    {word:`journaling`, meaning:`일지 쓰기, 저널링`, pos:`n.`, deriv:`journal (n.), journalist (n.)`},
+    {word:`form a habit`, meaning:`습관을 형성하다`, pos:`idiom`, deriv:`habit (n.), habitual (adj.)`},
+    {word:`subscriber`, meaning:`구독자`, pos:`n.`, deriv:`subscribe (v.), subscription (n.)`},
+    {word:`ideally`, meaning:`이상적으로`, pos:`adv.`, deriv:`ideal (adj./n.)`},
+    {word:`concept`, meaning:`개념`, pos:`n.`, deriv:`conceptual (adj.)`},
+    {word:`cross one's mind`, meaning:`(생각이) 떠오르다`, pos:`idiom`, deriv:`—`},
+    {word:`originally`, meaning:`원래, 본래`, pos:`adv.`, deriv:`origin (n.), original (adj.)`},
+    {word:`overcome`, meaning:`극복하다`, pos:`v.`, deriv:`—`},
+    {word:`creativity`, meaning:`창의성`, pos:`n.`, deriv:`creative (adj.), create (v.)`},
+    {word:`private`, meaning:`사적인, 개인적인`, pos:`adj.`, deriv:`privacy (n.), privately (adv.)`},
+    {word:`cleansing`, meaning:`정화, 세정`, pos:`n./adj.`, deriv:`cleanse (v.), clean (adj./v.)`}
+  ],
+  grammarSummary:[
+    {title:`1. 관계대명사 목적격 that (5형식 포함)`,body:`'a way of starting the day that many people find enormously useful'에서 that은 목적격 관계대명사로, 관계절 안에서 find + 목적어 + 보어 5형식 구조를 이룬다.`,point:`★ 출제포인트: 관계절 내 5형식 find A B 구조. 목적어 자리에 관계대명사가 빠져 있는 것 확인.`},
+    {title:`2. 전치사 + 관계대명사 (at which)`,body:`'There is no age at which it is too late to form this habit'에서 at which는 관계부사 when으로 바꿀 수 있다. 전치사가 관계대명사 앞에 오면 that 사용 불가.`,point:`★ 출제포인트: 전치사 + 관계대명사 구조에서 that 불가. at which = when, in which = where 대치 관계 암기.`},
+    {title:`3. help + 목적어 + 동사원형 (원형부정사)`,body:`'developed to help writers and artists overcome a loss of creativity'에서 help는 목적격보어로 원형부정사(overcome)를 취한다. to overcome으로도 쓸 수 있다.`,point:`★ 출제포인트: help + 목적어 + V원형 / to V 모두 가능. 수능 어법에서 to 유무 오류로 출제.`},
+    {title:`4. be meant to + 동사원형 (수동 의도)`,body:`'These pages are meant to be a brain cleansing'에서 be meant to V는 '~하도록 의도되다'의 수동 관용 표현이다. be intended to V와 동의.`,point:`★ 출제포인트: 'be meant to + 동사원형' 구조. meant 뒤에 to부정사가 와야 함. 동명사 불가.`},
+    {title:`5. 가주어 it + 의미상 주어 for + 진주어 to부정사`,body:`'It is important for you to write freely and honestly'는 가주어-진주어 구문. for you가 to부정사의 의미상 주어다. 형용사의 성격에 따라 for/of를 구분한다(important→for, kind→of).`,point:`★ 출제포인트: for vs. of 선택. 성격·태도 형용사(kind, wise, foolish)→of, 나머지→for.`}
+  ],
+  translation:`Good Habits 채널에 오신 것을 환영합니다! 저는 팟캐스트 진행자 Regan입니다. 오늘은 저를 포함한 많은 사람들이 매우 유용하다고 느끼는 하루 시작법에 대해 이야기하려 합니다. 바로 "모닝 페이지"라고 불리는 일종의 저널링입니다. 이 습관을 형성하기에 너무 늦은 나이란 없습니다. 저는 8년 전 고등학생 때 시작했고, 그것이 바로 오늘 에피소드가 특히 십 대 구독자들을 위한 이유입니다.
+
+모닝 페이지는 "자유 글쓰기" 세 페이지로, 이상적으로는 아침에 가장 먼저 하는 것입니다. 개념은 간단합니다. 매일 아침 일어나 펜과 공책을 집어 들고, 세 페이지를 채울 때까지 마음속에 떠오르는 무엇이든 씁니다. 이 기법은 원래 작가와 예술가들이 창의성 상실을 극복하도록 돕기 위해 개발되었지만, 누구든지 더 나은 삶을 만들기 위해 사용할 수 있습니다.
+
+모닝 페이지를 쓰는 데 올바르거나 잘못된 방법은 없지만, 두 가지 규칙이 있습니다. 첫째, 글쓰기를 좋거나 나쁘다고 판단하지 마세요. 이 페이지들은 "뇌 정화"가 되도록 의도되었으므로, 올바르게 쓰는 것에 대해 걱정하지 마세요. 둘째, 글쓰기를 완전히 사적으로 유지하세요. 자유롭고 솔직하게 쓰는 것이 중요합니다. 몇 주 동안은 자신이 쓴 글을 직접 읽지 말 것도 권고됩니다.`,
+  topic:{
+    subject:`모닝 페이지 저널링의 개념과 실천 규칙 소개`,
+    gist:`모닝 페이지는 매일 아침 세 페이지의 자유 글쓰기로, 뇌를 정화하고 창의성을 키우며 더 나은 삶을 만드는 데 도움을 준다. 판단 없이 쓰고 완전히 사적으로 유지하는 두 가지 규칙이 핵심이다.`,
+    flow:[`도입: 모닝 페이지 개념 소개 및 진행자 Regan의 경험`,`전개: 모닝 페이지의 정의·방법·기원`,`핵심: 두 가지 규칙 — 판단 금지 / 사생활 유지`,`결론: 자유롭고 솔직하게 쓰는 것이 핵심`]
+  },
+  quiz:[
+    {type:'mc',qnum:1,
+     question:`1. 다음 글의 주제로 가장 적절한 것은?`,
+     options:[`① 팟캐스트 채널 운영의 장단점`,`② 모닝 페이지 저널링의 개념, 방법, 규칙 소개`,`③ 고등학생을 위한 창의적인 글쓰기 대회 안내`,`④ 예술가들의 창의성 향상 방법 비교`,`⑤ 아침 루틴이 학업 성취에 미치는 영향`],
+     answer:1,
+     explanation:`글 전체는 모닝 페이지의 정의, 방법, 두 가지 규칙을 소개하는 내용이다. 진행자 Regan이 직접 체험하고 구독자에게 권장하는 저널링 습관을 다루고 있다.`},
+    {type:'mc',qnum:2,
+     question:`2. 다음 빈칸에 들어갈 말로 가장 적절한 것은?\n\nThe technique was originally developed to help writers and artists __________ a loss of creativity.`,
+     options:[`① avoiding`,`② to overcome`,`③ overcome`,`④ overcame`,`⑤ overcoming`],
+     answer:2,
+     explanation:`help + 목적어 + 동사원형(원형부정사) 구조. 'overcome'이 정답. 'to overcome'도 가능하나 보기에서는 원형 overcome이 더 간결한 정답.`},
+    {type:'mc',qnum:3,
+     question:`3. 다음 밑줄 친 부분 중 어법상 틀린 것은?\n\nThere is ① no age at which it is too late ② to form this habit. The morning pages are meant ③ to be a "brain cleansing." It is important ④ for you ⑤ to worry not about writing correctly.`,
+     options:[`① no age at which`,`② to form this habit`,`③ to be a "brain cleansing"`,`④ for you`,`⑤ to worry not about writing correctly`],
+     answer:4,
+     explanation:`to부정사의 부정은 'not to + 동사원형'으로 not이 to 앞에 와야 한다. 'not to worry about'이 올바른 형태. 'to worry not'은 틀린 어순.`},
+    {type:'mc',qnum:4,
+     question:`4. 다음 글의 내용과 일치하지 않는 것은?`,
+     options:[`① Regan은 고등학생 때 모닝 페이지를 시작했다.`,`② 모닝 페이지는 매일 아침 세 페이지를 자유롭게 쓰는 것이다.`,`③ 이 기법은 원래 작가와 예술가들을 위해 개발되었다.`,`④ 모닝 페이지를 쓸 때 문법과 맞춤법을 철저히 지켜야 한다.`,`⑤ 자신이 쓴 글을 몇 주 동안 읽지 말 것을 권고한다.`],
+     answer:3,
+     explanation:`본문에서 글쓰기를 좋거나 나쁘다고 판단하지 말고, 올바르게 쓰는 것을 걱정하지 말라고 했다. 문법·맞춤법을 철저히 지켜야 한다는 내용은 일치하지 않는다.`},
+    {type:'mc',qnum:5,
+     question:`5. 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것은?\n\n[주어진 글] The morning pages are three pages of "free writing," ideally done first thing in the morning. The concept is simple.\n\n(A) There is no right or wrong way to write your morning pages, but there are two rules.\n(B) Get up every morning, pick up a pen and a notebook, and write whatever crosses your mind until you have filled three pages.\n(C) The technique was originally developed to help writers and artists overcome a loss of creativity, but anybody can use it.`,
+     options:[`① (A)-(B)-(C)`,`② (A)-(C)-(B)`,`③ (B)-(C)-(A)`,`④ (B)-(A)-(C)`,`⑤ (C)-(A)-(B)`],
+     answer:2,
+     explanation:`'개념은 간단하다'는 주어진 글 다음에, 구체적 방법(B) → 기원과 적용 범위(C) → 규칙 소개(A) 순서가 자연스럽다.`}
+  ],
+  written:[
+    {title:`서술형 1. 빈칸 완성`,instruction:`다음 빈칸 (A), (B)에 들어갈 말을 본문에서 찾아 각각 1단어로 쓰시오.`,
+     question:`The morning pages require two rules: first, don't __(A)__ your writing as good or bad; second, keep your writing completely __(B)__.`,
+     modelAnswer:`(A) judge  (B) private`},
+    {title:`서술형 2. 내용 서술`,instruction:`모닝 페이지(morning pages)가 원래 누구를 위해 개발되었는지, 그리고 지금은 누가 사용할 수 있는지를 본문에 근거하여 영어로 쓰시오. (완전한 문장, 20단어 내외)`,
+     question:``,
+     modelAnswer:`It was originally developed to help writers and artists overcome a loss of creativity, but anybody can use it to create a better life.`}
+  ]
+},
+
+/* ══════════════════════════════════════
+   PASSAGE 1 — David & Yuna's Experiences
+══════════════════════════════════════ */
+{
+  id:'p1', num:'Passage 2',
+  title:`Experiences: David & Yuna`,
+  author:`Regan · Good Habits Podcast`,
+  fullText:[
+    `Now, let me share the experiences of some people I interviewed. David, a chef and kitchen manager, who has been writing morning pages for two years, says: My job tends to be very stressful. When I started writing morning pages, I just wrote a lot of complaints about my hard life. Later, I began to ask questions, like "What would make my life easier today?" "How can I improve my recipes?" Sometimes, I keep asking questions until I reach a sort of "click moment." It feels like a door opening to great ideas. Nowadays, I feel less stressed, enjoy my job more, and am more productive.`,
+    `Now, let's listen to Yuna, a high school junior: When I started this exercise last year, I simply wrote random thoughts like this: I'm sleepy. A slight headache's starting. I need to finish the math assignment today … I don't know what more to write now. But soon I found I had deeper and deeper thoughts. Now, I normally start by writing about today's tasks or worries. After that, I write about my dreams and how to move towards them. I often come up with great plans and a clear sense of purpose to start the day. Most importantly, I'm much happier than before.`
+  ],
+  sentences:[
+    {
+      eng:`Now, let me share the experiences of some people I interviewed.`,
+      jikdok:[
+        {e:`Now, / let me share / the experiences / of some people / I interviewed.`, k:`이제 / 제가 나눠볼게요 / 경험들을 / 몇몇 사람들의 / 제가 인터뷰했던.`}
+      ],
+      grammar:[
+        {name:`let + 목적어 + 동사원형 (사역동사)`, ex:`let me share the experiences`, point:`let + 목적어 + V원형: '~가 …하도록 허락하다'. 사역동사 let. 'let me to share(×)' 오류 주의.`},
+        {name:`관계대명사 목적격 생략`, ex:`some people (that/whom) I interviewed`, point:`목적격 관계대명사 that/whom 생략. interviewed의 목적어 자리가 비어 있음.`}
+      ]
+    },
+    {
+      eng:`David, a chef and kitchen manager, who has been writing morning pages for two years, says:`,
+      jikdok:[
+        {e:`David, / a chef and kitchen manager, / who has been writing morning pages / for two years, / says:`, k:`David는 / 요리사이자 주방 매니저인 / 모닝 페이지를 써온 / 2년 동안 / 말합니다:`}
+      ],
+      grammar:[
+        {name:`동격 명사구 (a chef and kitchen manager)`, ex:`David, a chef and kitchen manager`, point:`쉼표로 둘러싸인 명사구가 앞 명사(David)와 동격. 신원 정보 제공.`},
+        {name:`현재완료 진행형 (has been ~ing)`, ex:`who has been writing morning pages for two years`, point:`have/has been + V-ing + for 기간: 과거부터 현재까지 계속 진행 중인 동작 강조.`}
+      ]
+    },
+    {
+      eng:`My job tends to be very stressful.`,
+      jikdok:[
+        {e:`My job / tends to be / very stressful.`, k:`제 직업은 / ~하는 경향이 있습니다 / 매우 스트레스가 많은.`}
+      ],
+      grammar:[
+        {name:`tend to + 동사원형 (~하는 경향이 있다)`, ex:`tends to be very stressful`, point:`tend to V: '~하는 경향이 있다' 빈출 표현. 주어의 성질·습성 기술.`}
+      ]
+    },
+    {
+      eng:`When I started writing morning pages, I just wrote a lot of complaints about my hard life.`,
+      jikdok:[
+        {e:`When I started writing morning pages, / I just wrote / a lot of complaints / about my hard life.`, k:`모닝 페이지를 쓰기 시작했을 때 / 저는 그냥 썼습니다 / 많은 불만들을 / 힘든 삶에 대한.`}
+      ],
+      grammar:[
+        {name:`start + ~ing (동명사 목적어)`, ex:`started writing morning pages`, point:`start/begin + ~ing 또는 to V 모두 가능. 진행형 문장에서는 ~ing 불가(×). 'started to write'도 정답.`}
+      ]
+    },
+    {
+      eng:`Later, I began to ask questions, like "What would make my life easier today?" "How can I improve my recipes?"`,
+      jikdok:[
+        {e:`Later, / I began to ask questions, / like "What would make my life easier today?" / "How can I improve my recipes?"`, k:`나중에 / 저는 질문을 하기 시작했습니다 / "오늘 내 삶을 더 쉽게 만들어줄 것은?" / "어떻게 내 레시피를 향상시킬 수 있을까?"와 같이.`}
+      ],
+      grammar:[
+        {name:`begin + to부정사 (동사 목적어)`, ex:`began to ask questions`, point:`begin to V = begin ~ing. 의미 차이 없음. like는 전치사로 '~와 같이' 예시 열거.`},
+        {name:`의문사절 (What would make ~)`, ex:`What would make my life easier today?`, point:`make + 목적어 + 형용사(비교급) 5형식. easier는 easy의 비교급 보어.`}
+      ]
+    },
+    {
+      eng:`Sometimes, I keep asking questions until I reach a sort of "click moment."`,
+      jikdok:[
+        {e:`Sometimes, / I keep asking questions / until I reach / a sort of "click moment."`, k:`때때로 / 저는 계속 질문합니다 / ~에 이를 때까지 / 일종의 "딸깍 순간"에.`}
+      ],
+      grammar:[
+        {name:`keep + ~ing (계속 ~하다)`, ex:`keep asking questions`, point:`keep + 동명사: '계속 ~하다'. 'keep to ask(×)'. until절로 지속의 끝점 제시.`}
+      ]
+    },
+    {
+      eng:`It feels like a door opening to great ideas.`,
+      jikdok:[
+        {e:`It feels like / a door opening / to great ideas.`, k:`그것은 느껴집니다 / 문이 열리는 것처럼 / 훌륭한 아이디어들을 향해.`}
+      ],
+      grammar:[
+        {name:`feel like + 명사구 (~처럼 느껴지다)`, ex:`It feels like a door opening to great ideas`, point:`feel like + 명사/동명사구: '~처럼 느껴지다'. opening은 현재분사로 door 수식.`}
+      ]
+    },
+    {
+      eng:`Nowadays, I feel less stressed, enjoy my job more, and am more productive.`,
+      jikdok:[
+        {e:`Nowadays, / I feel less stressed, / enjoy my job more, / and am more productive.`, k:`요즘은 / 스트레스를 덜 느끼고 / 일을 더 즐기고 / 더 생산적입니다.`}
+      ],
+      grammar:[
+        {name:`병렬 구조 (feel / enjoy / am)`, ex:`feel less stressed, enjoy my job more, and am more productive`, point:`I를 공통 주어로 세 동사구 병렬. 비교급(less, more) 반복으로 변화 대조.`}
+      ]
+    },
+    {
+      eng:`When I started this exercise last year, I simply wrote random thoughts like this:`,
+      jikdok:[
+        {e:`When I started this exercise last year, / I simply wrote / random thoughts / like this:`, k:`작년에 이 활동을 시작했을 때 / 저는 단순히 적었습니다 / 무작위적인 생각들을 / 이처럼:`}
+      ],
+      grammar:[
+        {name:`시간 부사절 (when절)`, ex:`When I started this exercise last year`, point:`when절이 주절의 시간적 배경 제공. like this + 콜론(:)으로 구체적 예시 인용 연결.`}
+      ]
+    },
+    {
+      eng:`I'm sleepy. A slight headache's starting. I need to finish the math assignment today … I don't know what more to write now.`,
+      jikdok:[
+        {e:`I'm sleepy. / A slight headache's starting. / I need to finish the math assignment today …`, k:`졸립니다. / 약간의 두통이 시작되고 있습니다. / 오늘 수학 과제를 끝내야 합니다…`},
+        {e:`I don't know / what more to write now.`, k:`저는 모르겠습니다 / 지금 무엇을 더 써야 할지.`}
+      ],
+      grammar:[
+        {name:`의문사 + to부정사 (what to write)`, ex:`what more to write now`, point:`의문사 + to부정사: 명사구 기능. '무엇을 써야 할지'. know의 목적어. 'what more = what else more'.`}
+      ]
+    },
+    {
+      eng:`But soon I found I had deeper and deeper thoughts.`,
+      jikdok:[
+        {e:`But soon / I found / I had deeper and deeper thoughts.`, k:`하지만 곧 / 저는 발견했습니다 / 점점 더 깊은 생각들이 생겼다는 것을.`}
+      ],
+      grammar:[
+        {name:`명사절 접속사 that 생략 (found that)`, ex:`I found (that) I had deeper and deeper thoughts`, point:`find/think/know 등 뒤의 명사절 접속사 that 생략 가능.`},
+        {name:`비교급 반복 (deeper and deeper)`, ex:`deeper and deeper thoughts`, point:`비교급 + and + 비교급: '점점 더 ~한'. 점진적 변화 강조 표현.`}
+      ]
+    },
+    {
+      eng:`Now, I normally start by writing about today's tasks or worries.`,
+      jikdok:[
+        {e:`Now, / I normally start / by writing / about today's tasks or worries.`, k:`이제 / 저는 보통 시작합니다 / 씀으로써 / 오늘의 과제나 걱정들에 대해.`}
+      ],
+      grammar:[
+        {name:`by + 동명사 (수단)`, ex:`start by writing about today's tasks or worries`, point:`전치사 by + 동명사: '~함으로써' 수단. 'start by + ~ing'의 구조.`}
+      ]
+    },
+    {
+      eng:`After that, I write about my dreams and how to move towards them.`,
+      jikdok:[
+        {e:`After that, / I write about / my dreams / and how to move towards them.`, k:`그 후에 / 저는 씁니다 / 제 꿈들에 대해 / 그리고 그것들을 향해 나아가는 방법에 대해.`}
+      ],
+      grammar:[
+        {name:`의문사 + to부정사 병렬 (dreams and how to move)`, ex:`my dreams and how to move towards them`, point:`전치사 about의 목적어로 명사(my dreams)와 의문사+to부정사(how to move) 병렬.`}
+      ]
+    },
+    {
+      eng:`I often come up with great plans and a clear sense of purpose to start the day.`,
+      jikdok:[
+        {e:`I often come up with / great plans / and a clear sense of purpose / to start the day.`, k:`저는 종종 떠올립니다 / 훌륭한 계획들과 / 뚜렷한 목적 의식을 / 하루를 시작하기 위한.`}
+      ],
+      grammar:[
+        {name:`come up with (~을 생각해내다)`, ex:`come up with great plans`, point:`구동사 come up with = think of / devise. '아이디어·계획을 생각해내다'. 수능 어휘 빈출.`},
+        {name:`to부정사 형용사적 용법`, ex:`a clear sense of purpose to start the day`, point:`to start the day가 앞 명사구 a clear sense of purpose를 수식. '하루를 시작하기 위한'.`}
+      ]
+    },
+    {
+      eng:`Most importantly, I'm much happier than before.`,
+      jikdok:[
+        {e:`Most importantly, / I'm much happier / than before.`, k:`가장 중요하게는 / 저는 훨씬 더 행복합니다 / 이전보다.`}
+      ],
+      grammar:[
+        {name:`비교급 강조 (much happier)`, ex:`much happier than before`, point:`비교급 앞 much/even/far/still/a lot으로 강조. very는 비교급 강조 불가(×).`}
+      ]
+    }
+  ],
+  vocab:[
+    {word:`complaint`, meaning:`불만, 불평`, pos:`n.`, deriv:`complain (v.)`},
+    {word:`recipe`, meaning:`요리법, 비결`, pos:`n.`, deriv:`—`},
+    {word:`productive`, meaning:`생산적인`, pos:`adj.`, deriv:`produce (v.), productivity (n.)`},
+    {word:`random`, meaning:`무작위의, 임의의`, pos:`adj.`, deriv:`randomly (adv.)`},
+    {word:`slight`, meaning:`약간의, 가벼운`, pos:`adj.`, deriv:`slightly (adv.)`},
+    {word:`assignment`, meaning:`과제, 임무`, pos:`n.`, deriv:`assign (v.)`},
+    {word:`come up with`, meaning:`~을 생각해내다, 떠올리다`, pos:`idiom`, deriv:`—`},
+    {word:`sense of purpose`, meaning:`목적 의식`, pos:`n.`, deriv:`purpose (n.), purposeful (adj.)`},
+    {word:`tend to`, meaning:`~하는 경향이 있다`, pos:`idiom`, deriv:`tendency (n.)`},
+    {word:`click moment`, meaning:`딸깍 순간, 통찰의 순간`, pos:`n.`, deriv:`—`},
+    {word:`stressful`, meaning:`스트레스가 많은`, pos:`adj.`, deriv:`stress (n./v.)`},
+    {word:`towards`, meaning:`~을 향해`, pos:`prep.`, deriv:`—`}
+  ],
+  grammarSummary:[
+    {title:`1. 현재완료 진행형 (has been ~ing)`,body:`'who has been writing morning pages for two years'에서 has been writing은 현재완료 진행형으로, 과거에 시작해 현재까지 계속 진행 중임을 나타낸다.`,point:`★ 출제포인트: 현재완료 진행형(has been V-ing) vs. 현재완료(has p.p.) 구별. for/since와 함께 쓰여 지속 강조.`},
+    {title:`2. keep + 동명사 (계속 ~하다)`,body:`'I keep asking questions until I reach a click moment'에서 keep은 목적어로 동명사를 취한다. 'keep to ask(×)'는 오류.`,point:`★ 출제포인트: keep + ~ing (계속). 'keep + to부정사' 오류 유의. stop to V(목적) vs. stop ~ing(중단)과도 대조.`},
+    {title:`3. 비교급 반복 (deeper and deeper)`,body:`'I had deeper and deeper thoughts'는 비교급을 반복하여 점진적 변화를 강조하는 표현이다.`,point:`★ 출제포인트: '비교급 + and + 비교급 = 점점 더 ~한'. 수능 독해 빈출 표현. more and more + 형용사로도 표현 가능.`},
+    {title:`4. 의문사 + to부정사 (what/how to V)`,body:`'I don't know what more to write now'와 'how to move towards them'은 의문사 + to부정사 구조로 명사구 역할을 한다. '무엇을/어떻게 ~할지'의 의미.`,point:`★ 출제포인트: 의문사 + to V 구조는 명사절(의문사 + 주어 + should + V)로 바꿀 수 있음. 수능 빈칸·어법 빈출.`},
+    {title:`5. come up with (구동사)`,body:`'I often come up with great plans'에서 come up with는 '생각해내다, 고안하다'의 구동사다. with의 목적어로 명사구가 온다.`,point:`★ 출제포인트: 구동사 come up with = think of / devise. with 뒤 목적어 필요. 수동태 시 'be come up with(×)' → 'be thought of(○)'.`}
+  ],
+  translation:`이제 제가 인터뷰한 몇몇 사람들의 경험을 나눠보겠습니다. 요리사이자 주방 매니저인 David는 모닝 페이지를 2년째 써오고 있습니다. 그는 이렇게 말합니다: "제 직업은 스트레스가 매우 많은 경향이 있습니다. 모닝 페이지를 쓰기 시작했을 때, 저는 힘든 삶에 대한 불만만 가득 적었습니다. 나중에는 '오늘 내 삶을 더 쉽게 만들어줄 것은 무엇인가?' '어떻게 내 레시피를 향상시킬 수 있을까?'와 같은 질문들을 하기 시작했습니다. 때때로 일종의 '딸깍 순간'에 이를 때까지 계속 질문합니다. 훌륭한 아이디어들을 향해 문이 열리는 것 같은 느낌입니다. 요즘은 스트레스를 덜 느끼고, 일을 더 즐기며, 더 생산적입니다."
+
+이제 고등학교 2학년 Yuna의 이야기를 들어보겠습니다. "작년에 이 활동을 시작했을 때, 저는 단순히 이런 무작위적인 생각들을 적었습니다: '졸립다. 약간 두통이 시작되고 있다. 오늘 수학 과제를 끝내야 한다… 이제 뭘 더 써야 할지 모르겠다.' 하지만 곧 점점 더 깊은 생각들이 생겼습니다. 이제는 보통 오늘의 과제나 걱정에 대해 쓰며 시작합니다. 그 후에는 꿈과 그것을 향해 나아가는 방법에 대해 씁니다. 훌륭한 계획과 하루를 시작하기 위한 뚜렷한 목적 의식이 종종 떠오릅니다. 가장 중요한 것은, 이전보다 훨씬 더 행복해졌다는 것입니다."`,
+  topic:{
+    subject:`모닝 페이지 실천자들의 경험 — 스트레스 감소, 목적 의식, 행복감 향상`,
+    gist:`David와 Yuna의 경험은 모닝 페이지가 단순한 불만 표출에서 깊은 자기 성찰과 창의적 아이디어로 발전하는 과정을 보여준다. 두 사람 모두 정서적 안정, 목적 의식, 행복감이 향상되었다.`,
+    flow:[`도입: David의 경험 — 불만에서 질문으로, 스트레스 감소`,`전개: David의 '딸깍 순간' — 창의적 아이디어 발견`,`전개: Yuna의 경험 — 단순한 생각에서 깊은 성찰로`,`결론: 두 사람 모두 더 행복하고 생산적인 삶을 보고함`]
+  },
+  quiz:[
+    {type:'mc',qnum:1,
+     question:`1. 다음 글의 주제로 가장 적절한 것은?`,
+     options:[`① 아침 식사가 학업 성취에 미치는 긍정적 영향`,`② 모닝 페이지 실천자들의 긍정적 변화 경험 소개`,`③ 요리사와 고등학생의 직업 선택 동기 비교`,`④ 일기 쓰기와 팟캐스트의 공통점`,`⑤ 고등학생의 수면 부족과 두통 해결 방법`],
+     answer:1,
+     explanation:`David의 스트레스 감소·생산성 향상, Yuna의 목적 의식·행복감 증가 등 모닝 페이지 실천자들의 긍정적 변화 경험이 글의 중심 내용이다.`},
+    {type:'mc',qnum:2,
+     question:`2. 다음 빈칸에 들어갈 말로 가장 적절한 것은?\n\nI often __________ great plans and a clear sense of purpose to start the day.`,
+     options:[`① run into`,`② come up with`,`③ get rid of`,`④ put up with`,`⑤ look forward to`],
+     answer:1,
+     explanation:`본문에서 'come up with great plans'가 사용되었다. '계획을 생각해내다'의 의미로 come up with가 가장 적절.`},
+    {type:'mc',qnum:3,
+     question:`3. 다음 밑줄 친 부분 중 어법상 틀린 것은?\n\nDavid, ① a chef and kitchen manager, who ② has been writing morning pages for two years, says his job ③ tends to be stressful. He ④ keeps to ask questions until he reaches a "click moment" and feels ⑤ much happier now.`,
+     options:[`① a chef and kitchen manager`,`② has been writing morning pages`,`③ tends to be stressful`,`④ keeps to ask questions`,`⑤ much happier now`],
+     answer:3,
+     explanation:`keep은 목적어로 동명사를 취한다. 'keeps asking questions'이 올바른 표현. 'keeps to ask(×)'는 어법상 오류.`},
+    {type:'mc',qnum:4,
+     question:`4. 다음 글의 내용과 일치하지 않는 것은?`,
+     options:[`① David는 처음에 힘든 삶에 대한 불만을 많이 적었다.`,`② David는 질문을 통해 '딸깍 순간'에 이르는 경험을 했다.`,`③ Yuna는 작년에 모닝 페이지를 시작했다.`,`④ Yuna는 처음부터 깊고 철학적인 생각들을 적었다.`,`⑤ Yuna는 모닝 페이지 후 이전보다 훨씬 행복해졌다.`],
+     answer:3,
+     explanation:`본문에서 Yuna는 처음에 '졸립다', '두통이 있다'는 등의 단순한 무작위적 생각(random thoughts)을 적었다고 했다. 처음부터 깊은 생각을 적었다는 것은 일치하지 않는다.`},
+    {type:'mc',qnum:5,
+     question:`5. 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것은?\n\n[주어진 글] When I started this exercise last year, I simply wrote random thoughts.\n\n(A) Now, I normally start by writing about today's tasks or worries. After that, I write about my dreams.\n(B) Most importantly, I'm much happier than before.\n(C) But soon I found I had deeper and deeper thoughts.`,
+     options:[`① (A)-(B)-(C)`,`② (A)-(C)-(B)`,`③ (B)-(C)-(A)`,`④ (C)-(A)-(B)`,`⑤ (C)-(B)-(A)`],
+     answer:3,
+     explanation:`단순한 생각(주어진 글) → 점점 깊어짐(C) → 지금의 글쓰기 방식(A) → 결론·행복(B) 순서가 자연스럽다.`}
+  ],
+  written:[
+    {title:`서술형 1. 빈칸 완성`,instruction:`다음 빈칸 (A), (B)에 들어갈 말을 본문에서 찾아 각각 알맞은 형태로 쓰시오.`,
+     question:`David sometimes __(A)__ asking questions until he reaches a "click moment," and now feels less stressed and more __(B)__.`,
+     modelAnswer:`(A) keeps  (B) productive`},
+    {title:`서술형 2. 내용 서술`,instruction:`Yuna가 모닝 페이지를 시작했을 때와 현재의 글쓰기 내용이 어떻게 달라졌는지를 우리말로 비교하여 쓰시오. (각 20자 내외)`,
+     question:``,
+     modelAnswer:`처음에는 졸음, 두통, 숙제 등 단순한 무작위 생각들을 적었지만, 현재는 오늘의 과제·걱정과 꿈·목표를 향해 나아가는 방법 등 깊은 내용을 쓰며 목적 의식을 갖게 되었다.`}
+  ]
+},
+
+/* ══════════════════════════════════════
+   PASSAGE 2 — Regan's Story & Final Message
+══════════════════════════════════════ */
+{
+  id:'p2', num:'Passage 3',
+  title:`Regan's Story & Message`,
+  author:`Regan · Good Habits Podcast`,
+  fullText:[
+    `I can totally relate to these two people because their experiences are similar to mine. Like Yuna, I started this journaling during my first year of high school. At that time, I felt lost, stressed, and unsure about the future, and it wasn't easy for me to concentrate. When I first tried writing three daily pages, I didn't expect to stick to it. But I did, and it changed my life!`,
+    `Releasing my feelings onto paper every morning helped relieve my emotional tension. I gained more inner peace, which improved my schoolwork performance. Like David, I asked many questions, for instance, "Why was I so angry yesterday?" "Why are things less fun these days?" Then, I started raising more challenging ones: "What could make me happier right now?" "What is my ideal future? Can I reach it? How?"`,
+    `Answering these questions showed me what kind of person I was and what my needs, values, passions, and talents were. More importantly, I came to know what I truly wanted! I remembered my childhood dreams of being a writer, songwriter, and radio host. Gradually, vague ideas became clear plans. Years later, here I am, a successful podcaster and vlogger! I've also published a book and a music album. My morning pages, which I still write every day, have given me the drive and ideas to achieve these aims.`,
+    `Dear subscribers, will you try writing your morning pages, too? You never know what creative energy or ideas you have until you start exploring. Don't be a perfectionist, though. If you miss a few days, simply open your notebook and start again! The ultimate aim is to improve your mental health and help you lead a happier, more creative life.`
+  ],
+  sentences:[
+    {
+      eng:`I can totally relate to these two people because their experiences are similar to mine.`,
+      jikdok:[
+        {e:`I can totally relate to / these two people / because their experiences are similar to mine.`, k:`저는 완전히 공감할 수 있습니다 / 이 두 사람에게 / 왜냐하면 그들의 경험이 제 것과 비슷하기 때문입니다.`}
+      ],
+      grammar:[
+        {name:`relate to (공감하다, 관련짓다)`, ex:`can totally relate to these two people`, point:`relate to + 명사: '~에 공감하다, 이해하다'. 전치사 to 필수. 수능 어휘 빈출.`},
+        {name:`소유대명사 (mine)`, ex:`similar to mine`, point:`mine = my experiences. 소유대명사는 '소유격 + 명사'를 대체. 비교 대상 일치 확인(experiences = mine).`}
+      ]
+    },
+    {
+      eng:`Like Yuna, I started this journaling during my first year of high school.`,
+      jikdok:[
+        {e:`Like Yuna, / I started this journaling / during my first year of high school.`, k:`Yuna처럼 / 저는 이 저널링을 시작했습니다 / 고등학교 1학년 때.`}
+      ],
+      grammar:[
+        {name:`전치사 like (~처럼, 비교)`, ex:`Like Yuna, I started this journaling`, point:`like는 전치사로 '~처럼' 비교. 접속사 as와 구별. 'As Yuna did, I started(○)' vs. 'Like Yuna, I started(○)'.`}
+      ]
+    },
+    {
+      eng:`At that time, I felt lost, stressed, and unsure about the future, and it wasn't easy for me to concentrate.`,
+      jikdok:[
+        {e:`At that time, / I felt lost, stressed, and unsure about the future,`, k:`그 당시에 / 저는 길을 잃고, 스트레스를 받고, 미래에 대해 불확실하게 느꼈고,`},
+        {e:`and it wasn't easy / for me / to concentrate.`, k:`그리고 쉽지 않았습니다 / 저에게 / 집중하는 것이.`}
+      ],
+      grammar:[
+        {name:`feel + 형용사 보어 (2형식)`, ex:`felt lost, stressed, and unsure about the future`, point:`feel + 형용사: 2형식. 세 형용사 병렬. unsure about = '~에 대해 불확실한'.`},
+        {name:`가주어 it + 의미상 주어 for me + 진주어 to부정사`, ex:`it wasn't easy for me to concentrate`, point:`가주어-진주어 구문. for me = to concentrate의 의미상 주어. easy → for 사용.`}
+      ]
+    },
+    {
+      eng:`When I first tried writing three daily pages, I didn't expect to stick to it.`,
+      jikdok:[
+        {e:`When I first tried writing three daily pages, / I didn't expect / to stick to it.`, k:`처음 매일 세 페이지 쓰기를 시도했을 때 / 저는 기대하지 않았습니다 / 그것을 고수할 것이라고.`}
+      ],
+      grammar:[
+        {name:`try + ~ing vs. try + to부정사`, ex:`tried writing three daily pages`, point:`try ~ing: '(시험 삼아) ~해보다'. try to V: '~하려고 노력하다'. 의미 차이 구별 필수.`},
+        {name:`stick to (~을 고수하다, 계속하다)`, ex:`expect to stick to it`, point:`stick to + 명사/동명사: '~을 고수하다, 지속하다'. to는 전치사이므로 뒤에 동명사 가능.`}
+      ]
+    },
+    {
+      eng:`But I did, and it changed my life!`,
+      jikdok:[
+        {e:`But I did, / and it changed my life!`, k:`하지만 저는 그렇게 했고 / 그것이 제 삶을 바꿨습니다!`}
+      ],
+      grammar:[
+        {name:`대동사 did (앞 동사 대체)`, ex:`But I did`, point:`did = stuck to it. 앞서 언급한 동사구를 반복하지 않고 do/did로 대체. 강조·대조 기능.`}
+      ]
+    },
+    {
+      eng:`Releasing my feelings onto paper every morning helped relieve my emotional tension.`,
+      jikdok:[
+        {e:`Releasing my feelings onto paper / every morning / helped relieve / my emotional tension.`, k:`감정을 종이에 풀어내는 것이 / 매일 아침 / 완화하는 데 도움이 됐습니다 / 감정적 긴장을.`}
+      ],
+      grammar:[
+        {name:`동명사구 주어 (Releasing ~)`, ex:`Releasing my feelings onto paper every morning helped relieve`, point:`동명사구(Releasing ~)가 주어. 단수 취급(helped). help + 동사원형(원형부정사): relieve.`},
+        {name:`help + 동사원형 (원형부정사)`, ex:`helped relieve my emotional tension`, point:`help는 원형부정사(relieve) 또는 to부정사(to relieve) 모두 가능. 수능에서 to 유무로 출제.`}
+      ]
+    },
+    {
+      eng:`I gained more inner peace, which improved my schoolwork performance.`,
+      jikdok:[
+        {e:`I gained more inner peace, / which improved / my schoolwork performance.`, k:`저는 더 많은 내면의 평화를 얻었고 / 이것이 향상시켰습니다 / 학업 성취를.`}
+      ],
+      grammar:[
+        {name:`계속적 용법 관계대명사 (which)`, ex:`more inner peace, which improved my schoolwork performance`, point:`쉼표 + which: 앞 절 전체 또는 명사를 부연 설명. '그리고 그것이 ~했다'. that으로 대체 불가.`}
+      ]
+    },
+    {
+      eng:`Like David, I asked many questions, for instance, "Why was I so angry yesterday?" "Why are things less fun these days?"`,
+      jikdok:[
+        {e:`Like David, / I asked many questions, / for instance, / "Why was I so angry yesterday?" / "Why are things less fun these days?"`, k:`David처럼 / 저는 많은 질문들을 했습니다 / 예를 들어 / "나는 왜 어제 그렇게 화났을까?" / "요즘 왜 모든 것이 덜 재미있을까?"`}
+      ],
+      grammar:[
+        {name:`for instance (예시 담화 표지)`, ex:`I asked many questions, for instance, "Why was I so angry yesterday?"`, point:`for instance = for example. 삽입구로 쉼표로 분리. 구체적 예시를 연결하는 담화 표지.`}
+      ]
+    },
+    {
+      eng:`Then, I started raising more challenging ones: "What could make me happier right now?" "What is my ideal future? Can I reach it? How?"`,
+      jikdok:[
+        {e:`Then, / I started raising / more challenging ones: / "What could make me happier right now?" / "What is my ideal future? / Can I reach it? / How?"`, k:`그 다음에는 / 더 도전적인 것들을 제기하기 시작했습니다: / "지금 당장 무엇이 나를 더 행복하게 할 수 있을까?" / "나의 이상적인 미래는 무엇인가? / 그것에 도달할 수 있을까? / 어떻게?"`}
+      ],
+      grammar:[
+        {name:`start + ~ing / to부정사`, ex:`started raising more challenging ones`, point:`start + 동명사 또는 to부정사. 의미 차이 없음. 콜론(:) 뒤 직접 인용 예시 열거.`}
+      ]
+    },
+    {
+      eng:`Answering these questions showed me what kind of person I was and what my needs, values, passions, and talents were.`,
+      jikdok:[
+        {e:`Answering these questions / showed me / what kind of person I was / and what my needs, values, passions, and talents were.`, k:`이 질문들에 답하는 것이 / 보여주었습니다 / 어떤 사람인지를 / 그리고 내 필요, 가치관, 열정, 재능이 무엇인지를.`}
+      ],
+      grammar:[
+        {name:`동명사 주어 + show + 간접목적어 + 직접목적어 (4형식)`, ex:`Answering these questions showed me what kind of person I was`, point:`동명사 Answering이 주어. show + 사람 + 사물(간접·직접 목적어) 4형식. 직접 목적어는 간접의문문 2개 병렬.`}
+      ]
+    },
+    {
+      eng:`More importantly, I came to know what I truly wanted!`,
+      jikdok:[
+        {e:`More importantly, / I came to know / what I truly wanted!`, k:`더 중요하게도 / 저는 알게 되었습니다 / 제가 진정으로 원하는 것을!`}
+      ],
+      grammar:[
+        {name:`come to + 동사원형 (점차 ~하게 되다)`, ex:`came to know what I truly wanted`, point:`come to V: '점차 ~하게 되다'. 점진적 변화·깨달음 표현. 'got to know'와 유사.`}
+      ]
+    },
+    {
+      eng:`I remembered my childhood dreams of being a writer, songwriter, and radio host.`,
+      jikdok:[
+        {e:`I remembered / my childhood dreams / of being a writer, songwriter, and radio host.`, k:`저는 기억해냈습니다 / 어린 시절 꿈들을 / 작가, 작곡가, 라디오 진행자가 되는 것의.`}
+      ],
+      grammar:[
+        {name:`전치사 of + 동명사 (명사 수식)`, ex:`dreams of being a writer, songwriter, and radio host`, point:`명사(dreams) + of + 동명사: '~할 꿈'. of가 동명사구를 이끌어 앞 명사 수식. being의 보어 3개 병렬.`}
+      ]
+    },
+    {
+      eng:`Gradually, vague ideas became clear plans.`,
+      jikdok:[
+        {e:`Gradually, / vague ideas / became clear plans.`, k:`점차적으로 / 막연한 아이디어들이 / 명확한 계획이 되었습니다.`}
+      ],
+      grammar:[
+        {name:`2형식 become + 명사 보어`, ex:`vague ideas became clear plans`, point:`become + 명사: 주격보어. 형용사 보어와 달리 명사 보어는 주어의 변화된 상태·신분 표현.`}
+      ]
+    },
+    {
+      eng:`Years later, here I am, a successful podcaster and vlogger!`,
+      jikdok:[
+        {e:`Years later, / here I am, / a successful podcaster and vlogger!`, k:`몇 년 후 / 저 여기 있습니다 / 성공한 팟캐스터이자 브이로거로!`}
+      ],
+      grammar:[
+        {name:`here + 주어 + 동사 (도치 강조)`, ex:`here I am`, point:`here + 대명사 주어는 도치 없음(here I am). 명사 주어면 도치(here comes the bus). 'here I am' = 자신의 현 상황 강조.`},
+        {name:`동격 명사 (a successful podcaster and vlogger)`, ex:`here I am, a successful podcaster and vlogger`, point:`쉼표 뒤 명사구가 앞 I와 동격. 자신의 현재 신분을 부연 설명.`}
+      ]
+    },
+    {
+      eng:`I've also published a book and a music album.`,
+      jikdok:[
+        {e:`I've also published / a book and a music album.`, k:`저는 또한 출판했습니다 / 책 한 권과 음악 앨범 한 장을.`}
+      ],
+      grammar:[
+        {name:`현재완료 (결과)`, ex:`I've also published a book and a music album`, point:`have + p.p.: 과거의 행위가 현재에 결과로 남아 있음. '출판해서 지금도 존재함' — 결과 용법.`}
+      ]
+    },
+    {
+      eng:`My morning pages, which I still write every day, have given me the drive and ideas to achieve these aims.`,
+      jikdok:[
+        {e:`My morning pages, / which I still write every day, / have given me / the drive and ideas / to achieve these aims.`, k:`제 모닝 페이지는 / 제가 여전히 매일 쓰는 / 저에게 주었습니다 / 추진력과 아이디어를 / 이 목표들을 달성하기 위한.`}
+      ],
+      grammar:[
+        {name:`계속적 용법 관계대명사 (which)`, ex:`My morning pages, which I still write every day`, point:`쉼표 + which: 삽입 부연 절. 주절 동사 have given과 분리된 구조.`},
+        {name:`현재완료 (계속) + 4형식 (give + 사람 + 사물)`, ex:`have given me the drive and ideas`, point:`have given: 현재까지 계속 주고 있음. give + 간접목적어 + 직접목적어 4형식. to achieve는 목적 부사적 to부정사.`}
+      ]
+    },
+    {
+      eng:`Dear subscribers, will you try writing your morning pages, too?`,
+      jikdok:[
+        {e:`Dear subscribers, / will you try writing / your morning pages, too?`, k:`친애하는 구독자 여러분 / 여러분도 모닝 페이지 쓰기를 시도해 보시겠어요?`}
+      ],
+      grammar:[
+        {name:`try + ~ing (시험 삼아 해보다)`, ex:`try writing your morning pages`, point:`try ~ing = '(시험 삼아) ~해보다'. try to V(~하려고 노력하다)와 의미 구별 필수.`}
+      ]
+    },
+    {
+      eng:`You never know what creative energy or ideas you have until you start exploring.`,
+      jikdok:[
+        {e:`You never know / what creative energy or ideas you have / until you start exploring.`, k:`여러분은 절대 알 수 없습니다 / 어떤 창의적 에너지나 아이디어를 가지고 있는지 / 탐험을 시작하기 전까지는.`}
+      ],
+      grammar:[
+        {name:`never ~ until (부정 + 시간 부사절)`, ex:`You never know ~ until you start exploring`, point:`'~하기 전까지는 절대 알 수 없다'. 부정의 강조. start + ~ing: '~하기 시작하다'.`}
+      ]
+    },
+    {
+      eng:`Don't be a perfectionist, though.`,
+      jikdok:[
+        {e:`Don't be a perfectionist, / though.`, k:`완벽주의자가 되지 마세요 / 하지만.`}
+      ],
+      grammar:[
+        {name:`though (문장 끝 부사적 용법)`, ex:`Don't be a perfectionist, though`, point:`though가 문장 끝에 오면 '하지만, 그렇지만'의 양보·대조 부사. however와 유사.`}
+      ]
+    },
+    {
+      eng:`If you miss a few days, simply open your notebook and start again!`,
+      jikdok:[
+        {e:`If you miss a few days, / simply open your notebook / and start again!`, k:`며칠을 빠뜨리더라도 / 그냥 공책을 열고 / 다시 시작하세요!`}
+      ],
+      grammar:[
+        {name:`조건 부사절 (if절) + 명령문`, ex:`If you miss a few days, simply open your notebook and start again`, point:`if절(조건) + 명령문(주절). if절에서 현재시제가 미래 조건 표현. 병렬 명령문: open and start.`}
+      ]
+    },
+    {
+      eng:`The ultimate aim is to improve your mental health and help you lead a happier, more creative life.`,
+      jikdok:[
+        {e:`The ultimate aim is / to improve your mental health / and help you lead / a happier, more creative life.`, k:`궁극적인 목표는 / 정신 건강을 향상시키고 / 여러분이 이끌도록 돕는 것입니다 / 더 행복하고 더 창의적인 삶을.`}
+      ],
+      grammar:[
+        {name:`to부정사 주격보어 병렬 (to improve and help)`, ex:`is to improve ~ and help you lead`, point:`be동사 뒤 to부정사 2개 병렬(to improve / help). help + 목적어 + 동사원형(원형부정사): lead.`},
+        {name:`help + 목적어 + 동사원형`, ex:`help you lead a happier, more creative life`, point:`help you (to) lead: 원형부정사 또는 to부정사 모두 가능. 비교급 두 개 병렬(happier, more creative).`}
+      ]
+    }
+  ],
+  vocab:[
+    {word:`relate to`, meaning:`~에 공감하다; 관련짓다`, pos:`idiom`, deriv:`relation (n.), related (adj.)`},
+    {word:`concentrate`, meaning:`집중하다`, pos:`v.`, deriv:`concentration (n.)`},
+    {word:`stick to`, meaning:`~을 고수하다, 지속하다`, pos:`idiom`, deriv:`—`},
+    {word:`relieve`, meaning:`완화하다, 경감하다`, pos:`v.`, deriv:`relief (n.), relieved (adj.)`},
+    {word:`tension`, meaning:`긴장, 팽팽함`, pos:`n.`, deriv:`tense (adj./v.)`},
+    {word:`inner peace`, meaning:`내면의 평화`, pos:`n.`, deriv:`—`},
+    {word:`vague`, meaning:`막연한, 모호한`, pos:`adj.`, deriv:`vaguely (adv.), vagueness (n.)`},
+    {word:`gradually`, meaning:`점진적으로, 서서히`, pos:`adv.`, deriv:`gradual (adj.)`},
+    {word:`drive`, meaning:`추진력, 원동력; 욕구`, pos:`n.`, deriv:`driven (adj.)`},
+    {word:`achieve`, meaning:`달성하다, 이루다`, pos:`v.`, deriv:`achievement (n.)`},
+    {word:`perfectionist`, meaning:`완벽주의자`, pos:`n.`, deriv:`perfect (adj.), perfection (n.)`},
+    {word:`ultimate`, meaning:`궁극적인, 최종의`, pos:`adj.`, deriv:`ultimately (adv.)`}
+  ],
+  grammarSummary:[
+    {title:`1. try ~ing vs. try to V`,body:`'tried writing three daily pages'는 '시험 삼아 써보다'의 의미이고, try to write는 '쓰려고 노력하다'의 의미다. 마지막 문단의 'try writing your morning pages'도 동일한 용법.`,point:`★ 출제포인트: try ~ing(시험 삼아) vs. try to V(노력). remember ~ing(기억), stop ~ing(중단)과 함께 의미 차이가 있는 동사 목록으로 출제.`},
+    {title:`2. 계속적 용법 관계대명사 which`,body:`'I gained more inner peace, which improved my schoolwork performance'와 'My morning pages, which I still write every day'에서 쉼표 + which가 앞 내용을 부연 설명하는 계속적 용법으로 쓰였다.`,point:`★ 출제포인트: 계속적 용법 which는 that으로 대체 불가. 앞 절 전체를 받을 때도 which 사용.`},
+    {title:`3. 동명사 주어 + help + 원형부정사`,body:`'Releasing my feelings onto paper every morning helped relieve my emotional tension'에서 동명사구(Releasing ~)가 주어로, help + 동사원형(relieve) 구조가 쓰였다.`,point:`★ 출제포인트: 동명사구 주어 → 단수 동사. help + 목적어 + V원형/to V 모두 가능. to 유무로 오류 출제.`},
+    {title:`4. come to + 동사원형 (점차 ~하게 되다)`,body:`'I came to know what I truly wanted'에서 come to V는 '점차 ~하게 되다'로 점진적 변화나 깨달음을 표현한다. get to V와 유사한 표현.`,point:`★ 출제포인트: come to V(점차 ~)와 come ~ing(~하며 오다) 구별. 빈칸에 to know / to realize 등 빈출.`},
+    {title:`5. 현재완료 결과·계속 용법`,body:`'I've also published a book'(결과)와 'have given me the drive and ideas'(계속)에서 현재완료가 과거 행위의 현재 결과, 또는 지속을 나타낸다.`,point:`★ 출제포인트: 현재완료 4가지 용법(경험/완료/결과/계속) 구별. since/for/already/ever/never 등 함께 나오는 부사와 함께 파악.`}
+  ],
+  translation:`저는 이 두 사람에게 완전히 공감할 수 있습니다. 그들의 경험이 제 것과 비슷하기 때문입니다. Yuna처럼 저도 고등학교 1학년 때 이 저널링을 시작했습니다. 당시에 저는 길을 잃고 스트레스받으며 미래에 대해 불확실했고, 집중하는 것이 쉽지 않았습니다. 처음 매일 세 페이지 쓰기를 시도했을 때 계속할 수 있을 거라고 기대하지 않았습니다. 하지만 저는 해냈고, 그것이 제 삶을 바꿨습니다!
+
+매일 아침 감정을 종이에 풀어내는 것은 감정적 긴장을 완화하는 데 도움이 되었습니다. 더 많은 내면의 평화를 얻었고, 이것이 학업 성취를 향상시켰습니다. David처럼 저도 많은 질문을 했습니다. 예를 들어, "나는 왜 어제 그렇게 화났을까?", "요즘 왜 모든 것이 덜 재미있을까?" 그 다음에는 더 도전적인 질문들을 제기하기 시작했습니다. "지금 당장 무엇이 나를 더 행복하게 할 수 있을까?", "나의 이상적인 미래는 무엇인가? 그것에 도달할 수 있을까? 어떻게?"
+
+이 질문들에 답하는 것이 제가 어떤 사람인지, 그리고 제 필요, 가치관, 열정, 재능이 무엇인지 보여주었습니다. 더 중요하게도 제가 진정으로 원하는 것을 알게 되었습니다! 작가, 작곡가, 라디오 진행자가 되려는 어린 시절 꿈들이 떠올랐습니다. 점차 막연한 아이디어들이 명확한 계획으로 바뀌었습니다. 몇 년 후, 저는 성공한 팟캐스터이자 브이로거가 되었습니다! 책 한 권과 음악 앨범도 출판했습니다. 여전히 매일 쓰는 모닝 페이지가 이 목표들을 달성하기 위한 추진력과 아이디어를 주었습니다.
+
+친애하는 구독자 여러분, 여러분도 모닝 페이지를 써보시겠어요? 탐험을 시작하기 전까지는 자신이 어떤 창의적 에너지나 아이디어를 가지고 있는지 절대 알 수 없습니다. 하지만 완벽주의자가 되지는 마세요. 며칠을 빠뜨리더라도, 그냥 공책을 열고 다시 시작하세요! 궁극적인 목표는 여러분의 정신 건강을 향상시키고 더 행복하고 더 창의적인 삶을 이끌도록 돕는 것입니다.`,
+  topic:{
+    subject:`모닝 페이지를 통한 자기 발견, 꿈 실현, 그리고 구독자를 향한 실천 권유`,
+    gist:`진행자 Regan은 모닝 페이지를 통해 자신의 가치관과 열정을 발견하고 어린 시절 꿈을 이루었다. 완벽주의를 버리고 꾸준히 쓰는 것이 정신 건강과 창의적 삶의 열쇠임을 강조한다.`,
+    flow:[`도입: Regan의 고교 1학년 시작 — 방황과 스트레스`,`전개: 감정 해소 → 자기 성찰적 질문 → 가치·열정 발견`,`핵심: 어린 시절 꿈 재발견 → 성공한 팟캐스터·작가·음악가`,`결론: 완벽주의 탈피, 꾸준한 실천으로 더 행복한 삶`]
+  },
+  quiz:[
+    {type:'mc',qnum:1,
+     question:`1. 다음 글의 주제로 가장 적절한 것은?`,
+     options:[`① 팟캐스터가 되기 위한 구체적인 준비 방법`,`② 모닝 페이지를 통해 자기 발견과 꿈 실현을 이룬 경험과 실천 권유`,`③ 완벽주의가 창의적 삶에 미치는 긍정적 영향`,`④ 고등학생의 학업 스트레스 해소를 위한 다양한 방법`,`⑤ 어린 시절 꿈을 포기해야 하는 현실적 이유`],
+     answer:1,
+     explanation:`Regan 자신의 모닝 페이지 경험을 통한 자기 발견과 꿈 실현, 그리고 구독자들에게 완벽주의 없이 실천하도록 권유하는 내용이 글의 핵심이다.`},
+    {type:'mc',qnum:2,
+     question:`2. 다음 빈칸에 들어갈 말로 가장 적절한 것은?\n\nReleasing my feelings onto paper every morning helped __________ my emotional tension.`,
+     options:[`① to relieving`,`② relieved`,`③ relieve`,`④ to relieved`,`⑤ relieving`],
+     answer:2,
+     explanation:`help + 동사원형(원형부정사) 또는 to부정사 구조. 'relieve'(원형) 또는 'to relieve' 모두 가능하나 보기에서 원형 relieve가 정답.`},
+    {type:'mc',qnum:3,
+     question:`3. 다음 밑줄 친 부분 중 어법상 틀린 것은?\n\nI ① came to know what I truly wanted. I ② remembered my childhood dreams of being a writer. Vague ideas gradually ③ became clear plans. My morning pages ④ have given me the drive, which I ⑤ still wrote every day.`,
+     options:[`① came to know`,`② remembered my childhood dreams`,`③ became clear plans`,`④ have given me the drive`,`⑤ still wrote every day`],
+     answer:4,
+     explanation:`계속적 용법 관계대명사 which절은 주절(have given)과 시제가 일치해야 한다. 현재까지 매일 쓰고 있으므로 'which I still write every day'가 올바른 표현. 'wrote'(단순과거)는 오류.`},
+    {type:'mc',qnum:4,
+     question:`4. 다음 글의 내용과 일치하지 않는 것은?`,
+     options:[`① Regan은 고등학교 1학년 때 모닝 페이지를 시작했다.`,`② 처음에 모닝 페이지를 계속할 수 있을 거라고 기대하지 않았다.`,`③ 질문들에 답하면서 자신의 가치관, 열정, 재능을 발견했다.`,`④ 현재는 모닝 페이지를 더 이상 쓰지 않는다.`,`⑤ 책과 음악 앨범을 출판한 경험이 있다.`],
+     answer:3,
+     explanation:`본문에서 'My morning pages, which I still write every day'라고 명시했다. 현재도 매일 쓰고 있으므로 ④가 일치하지 않는다.`},
+    {type:'mc',qnum:5,
+     question:`5. 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것은?\n\n[주어진 글] Answering these questions showed me what kind of person I was and what my needs, values, passions, and talents were.\n\n(A) Years later, here I am, a successful podcaster and vlogger! I've also published a book and a music album.\n(B) More importantly, I came to know what I truly wanted! I remembered my childhood dreams.\n(C) Gradually, vague ideas became clear plans.`,
+     options:[`① (A)-(B)-(C)`,`② (A)-(C)-(B)`,`③ (B)-(C)-(A)`,`④ (B)-(A)-(C)`,`⑤ (C)-(A)-(B)`],
+     answer:2,
+     explanation:`질문 답하기(주어진 글) → 진정한 욕구·꿈 발견(B) → 아이디어가 계획으로(C) → 꿈 실현·성공(A) 순서가 자연스럽다.`}
+  ],
+  written:[
+    {title:`서술형 1. 빈칸 완성`,instruction:`다음 빈칸 (A), (B)에 들어갈 말을 본문에서 찾아 각각 1단어로 쓰시오.`,
+     question:`The ultimate aim of morning pages is to improve your mental health and help you lead a happier, more __(A)__ life. Don't be a __(B)__; if you miss a few days, simply start again.`,
+     modelAnswer:`(A) creative  (B) perfectionist`},
+    {title:`서술형 2. 내용 서술`,instruction:`Regan이 모닝 페이지를 통해 이룬 성취를 세 가지 이상 우리말로 쓰시오. (각 10자 내외)`,
+     question:``,
+     modelAnswer:`① 성공한 팟캐스터 및 브이로거가 되었다. ② 책을 출판했다. ③ 음악 앨범을 발표했다. (추가: 내면의 평화를 얻고 학업 성취가 향상되었다.)`}
+  ]
+}
+
+]; // end passages
+
+/* ══════════════════════════
+   STATE & NAV
+══════════════════════════ */
+let currentPassage = 0;
+let currentTab = 'full-text';
+
+function selectPassage(idx) {
+  currentPassage = idx;
+  document.querySelectorAll('.passage-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+  renderContent();
+}
+function selectTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('onclick').includes("'"+tab+"'"));
+  });
+  renderContent();
+}
+
+/* ══════════════════════════
+   RENDER
+══════════════════════════ */
+function renderContent() {
+  const p = passages[currentPassage];
+  const c = document.getElementById('content');
+  c.innerHTML = '';
+  const header = `<div class="passage-header">
+    <div class="label">${p.num} · YBM-1</div>
+    <h1>${p.title}</h1>
+    <div class="author">${p.author}</div>
+  </div>`;
+  if (currentTab==='full-text')   c.innerHTML = header + renderFullText(p);
+  else if (currentTab==='analysis')    c.innerHTML = header + renderAnalysis(p);
+  else if (currentTab==='vocab')       c.innerHTML = header + renderVocab(p);
+  else if (currentTab==='translation') c.innerHTML = header + renderTranslation(p);
+  else if (currentTab==='topic')       c.innerHTML = header + renderTopic(p);
+  else if (currentTab==='quiz')        c.innerHTML = header + renderQuiz(p);
+}
+
+function renderFullText(p) {
+  return `<div class="section-title"><span class="icon">①</span> 전문</div>
+    <div class="full-text-box">${p.fullText.map(t=>`<p>${t}</p>`).join('')}</div>`;
+}
+
+function renderAnalysis(p) {
+  const C=['①','②','③','④','⑤','⑥','⑦','⑧','⑨','⑩','⑪','⑫','⑬','⑭','⑮','⑯','⑰','⑱','⑲','⑳','㉑','㉒','㉓','㉔','㉕'];
+  let html = `<div class="section-title"><span class="icon">②</span> 문장분석</div>`;
+  p.sentences.forEach((s,i)=>{
+    html += `<div class="sentence-block">
+      <div class="sent-num">${C[i]||i+1}</div>
+      <div class="eng-box">${s.eng}</div>
+      <div class="jikdok">`;
+    s.jikdok.forEach(j=>{
+      html+=`<span class="eng-part">${j.e}</span><span class="kor-part">${j.k}</span>`;
+    });
+    html+=`</div><div class="grammar-bullets">`;
+    s.grammar.forEach(g=>{
+      html+=`<div class="grammar-item">
+        <span class="g-name">◆ ${g.name}</span><br>
+        <span class="g-ex">▶ ${g.ex}</span><br>
+        <span class="g-point">★ ${g.point}</span>
+      </div>`;
+    });
+    html+=`</div></div>`;
+  });
+  return html;
+}
+
+function renderVocab(p) {
+  let html=`<div class="section-title"><span class="icon">③</span> 핵심단어 및 표현</div>`;
+  p.vocab.forEach(v=>{
+    html+=`<div class="vocab-item">
+      <span class="vocab-word">◆ ${v.word}</span>
+      <span class="vocab-meaning">${v.meaning}</span>
+      <span class="vocab-pos">${v.pos}</span>
+      <span class="vocab-deriv">${v.deriv}</span>
+    </div>`;
+  });
+  return html;
+}
+
+function renderTranslation(p) {
+  const paras = p.translation.split('\n\n').filter(x=>x.trim());
+  return `<div class="section-title"><span class="icon">④</span> 전문해석</div>
+    <div class="translation-text">${paras.map(t=>`<p style="margin-bottom:14px">${t}</p>`).join('')}</div>`;
+}
+
+function renderTopic(p) {
+  const steps = p.topic.flow.map(s=>`<div class="flow-step">${s}</div>`).join('');
+  return `<div class="section-title"><span class="icon">⑤</span> 주제·요지·구조</div>
+    <div class="topic-card"><div class="topic-label">주제 (Topic)</div><div class="topic-content">${p.topic.subject}</div></div>
+    <div class="topic-card"><div class="topic-label">요지 (Main Idea)</div><div class="topic-content">${p.topic.gist}</div></div>
+    <div class="topic-card"><div class="topic-label">구조 흐름 (Structure)</div><div class="flow-steps">${steps}</div></div>`;
+}
+
+function renderQuiz(p) {
+  let html=`<div class="section-title"><span class="icon">⑥</span> 변형문제 & 서술형</div>`;
+  p.quiz.forEach((q,qi)=>{
+    const qid=`${p.id}_q${qi}`;
+    const opts=q.options.map((opt,oi)=>
+      `<button class="quiz-option" id="${qid}_o${oi}" onclick="checkAnswer('${qid}',${oi},${q.answer},'${qid}_exp')">${opt}</button>`
+    ).join('');
+    html+=`<div class="quiz-item">
+      <div class="quiz-q">${q.question}</div>
+      <div class="quiz-options">${opts}</div>
+      <div class="quiz-explanation" id="${qid}_exp">💡 ${q.explanation}</div>
+      <button class="quiz-reset" id="${qid}_reset" onclick="resetQuiz('${qid}',${q.options.length})">↺ 다시 풀기</button>
+    </div>`;
+  });
+  p.written.forEach((w,wi)=>{
+    const wid=`${p.id}_w${wi}`;
+    html+=`<div class="written-q">
+      <div class="wq-title">${w.title}</div>
+      <div class="wq-cond">📌 조건: ${w.instruction}</div>
+      ${w.question?`<div class="quiz-passage">${w.question}</div>`:''}
+      <textarea id="${wid}_ta" placeholder="여기에 답안을 작성하세요..."></textarea><br>
+      <button class="check-answer-btn" onclick="toggleModel('${wid}_ma')">모범답안 확인</button>
+      <div class="model-answer" id="${wid}_ma"><div class="ma-label">✅ 모범답안</div>${w.modelAnswer}</div>
+    </div>`;
+  });
+  return html;
+}
+
+function checkAnswer(qid,chosen,correct,expId){
+  const opts=document.querySelectorAll(`[id^="${qid}_o"]`);
+  opts.forEach(o=>o.disabled=true);
+  opts[chosen].classList.add(chosen===correct?'correct':'wrong');
+  if(chosen!==correct) opts[correct].classList.add('correct');
+  document.getElementById(expId).classList.add('show');
+  document.getElementById(qid+'_reset').classList.add('show');
+}
+function resetQuiz(qid,n){
+  for(let i=0;i<n;i++){
+    const o=document.getElementById(`${qid}_o${i}`);
+    if(o){o.disabled=false;o.classList.remove('correct','wrong');}
+  }
+  document.getElementById(qid+'_exp').classList.remove('show');
+  document.getElementById(qid+'_reset').classList.remove('show');
+}
+function toggleModel(id){document.getElementById(id).classList.toggle('show');}
+
+renderContent();
+</script>
+</body>
+</html>
